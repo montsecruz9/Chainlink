@@ -1,25 +1,27 @@
-pragma solidity ^0.6.7;
+pragma solidity ^0.6.6;
 
-// Import Chainlink Data Feeds contract
-import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+// 1. Import the "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol" contract
+import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
-contract PriceConsumerV3 {
+contract ZombieFactory {
 
-  // Create a `public` variable named `priceFeed` of type `AggregatorV3Interface`.
-  AggregatorV3Interface public priceFeed;
-  // Create a constructor
-  constructor() public {
-    // Instantiate the `AggregatorV3Interface` contract
-    priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
-  }
+    uint dnaDigits = 16;
+    uint dnaModulus = 10 ** dnaDigits;
 
-  function getLatestPrice() public view returns (int) {
-    (,int price,,,) = priceFeed.latestRoundData();
-    return price;
-  }
+    struct Zombie {
+        string name;
+        uint dna;
+    }
 
-  function getDecimals() public view returns (uint8) {
-    uint8 decimals = priceFeed.decimals();
-    return decimals;
-  }
+    Zombie[] public zombies;
+
+    function _createZombie(string memory _name, uint _dna) private {
+        zombies.push(Zombie(_name, _dna));
+    }
+
+    function _generatePseudoRandomDna(string memory _str) private view returns (uint) {
+        uint rand = uint(keccak256(abi.encodePacked(_str)));
+        return rand % dnaModulus;
+    }
+
 }
