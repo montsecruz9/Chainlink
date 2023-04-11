@@ -3,7 +3,7 @@ pragma solidity ^0.6.6;
 // 1. Import the "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol" contract
 import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
-contract ZombieFactory {
+contract ZombieFactory is VRFConsumerbase {
 
     uint dnaDigits = 16;
     uint dnaModulus = 10 ** dnaDigits;
@@ -14,6 +14,15 @@ contract ZombieFactory {
     }
 
     Zombie[] public zombies;
+
+    constructor() VRFConsumerBase(
+        0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B, // VRF Coordinator
+        0x01BE23585060835E02B77ef475b0Cc51aA1e0709  // LINK Token
+
+    ) public {
+
+    }
+
 
     function _createZombie(string memory _name, uint _dna) private {
         zombies.push(Zombie(_name, _dna));
